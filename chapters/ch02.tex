@@ -11,7 +11,7 @@ where $c_-$ is the cost of a false positive and $c_+$ is the cost of a false neg
 \end{exercise}
 
 \begin{tcolorbox}[title=Solution]
-\noindent With $\ell(y,z) = c_{+}\mathbf{1}(y=1,z=-1)+ c_{-}\mathbf{1}(y=-1, z=1)$, we have 
+With $\ell(y,z) = c_{+}\mathbf{1}(y=1,z=-1)+ c_{-}\mathbf{1}(y=-1, z=1)$, we have 
 \begin{align*}
     \mathcal{R}(f) &= \mathbb{E}[\ell(y,z)] \\
     &= \mathbb{E}[c_{+}\mathbf{1}(y=1,z=-1) + c_{-}\mathbf{1}(y=-1, z=1)] \\
@@ -25,14 +25,95 @@ The optimal classifier will select the most likely class weighted with the cost.
 \end{tcolorbox}
 
 \begin{exercise}[2.2]
-
+Consider a learning problem on $\mathcal{X} \times \mathcal{Y}$, with $\mathcal{Y} = \mathbb{R}$ and the absolute loss defined as $\ell(y,z) = |y-z|$. Compute a Bayes predictor $f_* : \mathcal{X} \to \mathbb{R}$.
 \end{exercise}
 
-\begin{tcolorbox}[title=Solution]
-
+\begin{tcolorbox}[title=Solution, breakable]
+\noindent With $\ell(y,z) = |y-z|$, we have 
 \begin{align*}
-\mathcal{R}(f) &= \mathbb{E}[\ell(y, x)]
+    \mathcal{R}(f) &= \mathbb{E}_{(x,y)}[\ell(y,z)] \\
+    &= \mathbb{E}_x[\mathbb{E}_{y|x}[|y-z||x]] \\
+    &= \int_{-\infty}^{\infty} \left( \int_{-\infty}^{\infty}|y-z|f(y|x)dy \right)f(x)dx\\
+    &=\int_{-\infty}^{\infty} \left( \int_{-\infty}^z(z-y)f(y|x)dy + \int_{z}^{\infty}(y-z)f(y|x)dy \right) f(x)dx.
+\end{align*}
+Observe that we want to minimize $\mathbb{E}_{y|x}[|y-z||x]$. 
+\begin{align*}
+    \frac{\partial\mathbb{E}[|y-z||x]}{\partial z} &= \frac{\partial}{\partial z}\left(\int_{-\infty}^z(z-y)f(y|x)dy + \int_{z}^{\infty}(y-z)f(y|x)dy\right)=0.
+\end{align*}
+Using Leibniz's integral rule for each term, for $\int_{-\infty}^z(z-y)f(y|x)dy$ we have
+\begin{align*}
+    \frac{\partial}{\partial z} \int_{-\infty}^z(z-y)f(y|x)dy = (z-z)f(z|x)\cdot\frac{d}{dz}z+ \int_{-\infty}^z\frac{\partial}{\partial z}[(z-y)f(y|x)]dy = \int_{-\infty}^zf(y|x)dy.
+\end{align*}
+Similarly, for $\int_{z}^{\infty}(y-z)f(y|x)dy$ we have
+\begin{align*}
+    \frac{\partial}{\partial z} \int_{z}^{\infty}(y-z)f(y|x)dy = -(z-z)f(z|x)\cdot\frac{d}{dz}z + \int_{z}^{\infty}\frac{\partial}{\partial z}[(y-z)f(y|x)]dy = -\int_{z}^{\infty}f(y|x)dy.
+\end{align*}
+The second term in the Leibniz's rule goes to 0 since we're differentiating a constant. This gives us $\int_{-\infty}^{z}f(y|x)dy = \int_z^{\infty}f(y|x)dy$. Thus, the Bayes predictor is $f_{*}(x)=\text{the median of }y|x$.
+\end{tcolorbox}
+
+\begin{exercise}[2.3]
+Consider a learning problem on $\mathcal{X} \times \mathcal{Y}$, with $\mathcal{Y} = \mathbb{R}$ and the "pinball" loss
+$$
+\ell(y,z) = \alpha(y-z)_+ + (1-\alpha)(z-y)_+,
+$$
+for $\alpha \in (0,1)$. Compute a Bayes predictor $f_* : \mathcal{X} \to \mathbb{R}$. Provide an interpretation in terms of quantiles.
+\end{exercise}
+
+\begin{tcolorbox}[title=Solution, breakable]
+With $\ell(y,z)=\alpha(y-z)_{+} + (1-\alpha)(z-y)_{+},$ we have
+\begin{align*}
+\mathcal{R}(f) &= \mathbb{E}_{(x,y)}[\ell(y,z)] \\
+&= \mathbb{E}_{x}[\mathbb{E}_{y|x}[\ell(y,z)|x] \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}(\alpha(y-z)_{+} + (1-\alpha)(z-y)_{+} f(y|x) dy )f(x) dx \\
+&= \int_{-\infty}^{\infty}(\int_{-\infty}^z (1-\alpha)(z-y)f(y|x)dy + \int_{z}^{\infty}\alpha(y-z)f(y|x)dy   )f(x)dx.
 \end{align*}
 
+Observe that we want to minimize $\mathbb{E}_{y|x}[\ell(y,z)|x]$. 
+\begin{align*}
+\frac{\partial \mathbb{E}[\ell(y,z)|x]}{\partial z} &= \frac{\partial}{\partial z} \left(\int_{-\infty}^z (1-\alpha)(z-y)f(y|x)dy + \int_{z}^{\infty}\alpha(y-z)f(y|x)dy\right)=0.
+\end{align*}
+Using Leibniz's integral rule, same as Exercise 2.2, we have 
+\begin{align*}
+(1-\alpha)\int_{-\infty}^zf(y|x)dy &= \alpha \int_{z}^{\infty}f(y|x)dy
+\to \int_{-\infty}^z f(y|x) dy = \alpha
+\end{align*}
+Thus, the Bayes predictor is $f_*(x)=\text{the } 100\alpha \text{th quantiles of the distribution }y|x$.
 \end{tcolorbox}
+
+\begin{exercise}[2.4]
+Characterize Bayes predictors for regression with the “$\varepsilon$-insensitive”
+loss defined as $\ell(y, z) = \max \{0, |y-z| - \varepsilon \}$. If for each $x, y$ is supported in an interval
+of length less than $2\varepsilon$, what are the Bayes predictors?
+\end{exercise}
+
+
+\begin{tcolorbox}[breakable, title=Solution]
+We have
+\begin{align*}
+    \mathcal{R}(f) &= \mathbb{E}[\ell(y, x)]  \\
+    &= \mathbb{E}[\max \{0, |y-z| - \varepsilon\}] \\
+    &= \mathbb{E}_x[\mathbb{E}_{y|x}[]]
+\end{align*}
+\end{tcolorbox}
+
+
+\begin{exercise}[2.5]
+$\textbf{(Inverting predictions)}$ Consider the binary classification problem with
+$\mathcal{Y}= \{-1,1\}$ and the 0-1 loss. Relate the risk of a prediction $f$ to that of its opposite $-f$.
+\end{exercise}
+
+
+
+\begin{exercise}[2.6]
+$\textbf{(“Chance” predictions)}$ Consider binary classification problems with
+the 0-1 loss. What is the risk of a random prediction rule where we predict the two
+classes with equal probabilities independent of input $x$? Address the same question with
+multiple categories.
+\end{exercise}
+
+
+\begin{exercise}[2.7]
+Consider a random prediction rule where we predict from the proba
+bility distribution of $y$ given $x$. When is this achieving the Bayes risk?
+\end{exercise}
 
