@@ -1,4 +1,4 @@
-# Solutions — Learning Theory from First Principles (Francis Bach)
+# Learning Theory from First Principles (Francis Bach)
 
 My worked solutions to the exercises in Francis Bach's *Learning Theory from
 First Principles*.
@@ -42,10 +42,5 @@ tectonic main.tex
 1. Create `chapters/chXX_name.tex` following the pattern in
    `chapters/ch01_intro.tex` (`exercise` / `proof` environments).
 2. Add `\input{chapters/chXX_name}` to `main.tex`.
-3. Push — the PDF rebuilds automatically.
+3. Push and the PDF rebuilds automatically.
 
-## Progress
-
-- [x] Chapter 1
-- [ ] Chapter 2
-- [ ] Chapter 3
