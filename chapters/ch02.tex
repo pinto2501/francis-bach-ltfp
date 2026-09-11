@@ -77,7 +77,8 @@ Using Leibniz's integral rule, same as Exercise 2.2, we have
 (1-\alpha)\int_{-\infty}^zf(y|x)dy &= \alpha \int_{z}^{\infty}f(y|x)dy
 \to \int_{-\infty}^z f(y|x) dy = \alpha
 \end{align*}
-Thus, the Bayes predictor is $f_*(x)=\text{the } 100\alpha \text{th quantiles of the distribution }y|x$.
+Thus, the Bayes predictor is $f_*(x)=\text{the } 100\alpha \text{th quantiles of the distribution }y|x$. A more definitive way to represent
+$f_*(x)$ is $F^{-1}_{y|x}(\alpha)$ or $\min \{z: F(z) \ge \alpha\}$ in the case where $F$ is not invertible.
 \end{tcolorbox}
 
 \begin{exercise}[2.4]
