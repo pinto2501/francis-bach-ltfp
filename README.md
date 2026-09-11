@@ -3,19 +3,15 @@
 My worked solutions to the exercises in Francis Bach's *Learning Theory from
 First Principles*.
 
-## 📄 Latest PDF
-
-Every push to `main` auto-builds the PDF via GitHub Actions and publishes it
-to the `latest` release:
-
-**[⬇ Download the latest PDF](../../releases/download/latest/main.pdf)**
 
 ## Structure
 
 ```
-main.tex              # master file — includes preamble + all chapters
+build/
+  main.pdf            # Latest pdf
+main.tex              # master file which includes preamble + all chapters
 preamble.tex          # packages, theorem environments, shared macros
-refs.bib              # bibliography (if any)
+refs.bib              # bibliography
 chapters/
   ch01_intro.tex       # one file per chapter
   ...
